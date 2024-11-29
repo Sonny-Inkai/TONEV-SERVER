@@ -1,0 +1,27 @@
+# docker-compose.dev.yml
+version: '3.8'
+
+services:
+  tts-server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: runtime
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=true
+      - LOG_LEVEL=DEBUG
+      - HOST=0.0.0.0
+      - PORT=8000
+    volumes:
+      - ./:/app
+      - ./models:/app/models
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
